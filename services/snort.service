@@ -1,0 +1,25 @@
+[Unit]
+Description=Snort 3 IDS/IPS Daemon
+After=network.target snort3-nic.service
+
+[Service]
+Type=simple
+# Run Snort in daemon mode on interface ens33.  Adjust the interface name to match
+# your monitoring NIC.  The extra options increase the snap length, ignore bad
+# checksums, drop privileges to the 'snort' user and create a PID file.
+ExecStart=/usr/local/bin/snort \
+  -c /usr/local/etc/snort/snort.lua \
+  -i ens33 \
+  -A alert_fast \
+  -s 65535 \
+  -k none \
+  -l /var/log/snort \
+  -D \
+  -u snort \
+  -g snort \
+  --create-pidfile
+
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

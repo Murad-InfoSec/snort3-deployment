@@ -1,0 +1,16 @@
+[Unit]
+Description=Set Snort 3 NIC in promiscuous mode and Disable GRO, LRO on boot
+After=network.target
+
+[Service]
+Type=oneshot
+# Enable promiscuous mode on the monitoring interface and disable generic and
+# large receive offload.  Using ExecStartPost ensures both commands run
+# sequentially within the same one‑shot service.
+ExecStart=/usr/sbin/ip link set dev ens33 promisc on
+ExecStartPost=/usr/sbin/ethtool -K ens33 gro off lro off
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
